@@ -11,8 +11,7 @@ const PORT = process.env.PORT || 3000;
 const USERS_FILE = path.join(__dirname, 'data/users.json');
 const LOGS_FILE = path.join(__dirname, 'data/admin_logs.json');
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "Shadow2563";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "OblivionSecure2025!";
-const JWT_SECRET = process.env.JWT_SECRET || "your_secure_secret";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "Shadow2563";
 
 // Initialize server
 app.use(cors());
