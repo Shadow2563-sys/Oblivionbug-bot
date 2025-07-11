@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Oblivion - Password Reset</title>
+  <title>Oblivion - Reset Password</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    /* Same CSS as your login page */
     :root {
       --neon-green: #0f0;
       --dark-bg: #0a0a0a;
@@ -24,7 +23,7 @@
     }
     
     body {
-      background: url('https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
+      background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
       background-size: cover;
       font-family: 'Roboto', sans-serif;
       color: var(--text-color);
@@ -32,6 +31,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      margin: 0;
     }
     
     .reset-container {
@@ -137,71 +137,199 @@
       display: none;
     }
     
-    .instructions {
-      color: #aaa;
-      font-size: 14px;
-      margin-bottom: 20px;
-      line-height: 1.5;
+    .password-strength {
+      height: 4px;
+      background: #333;
+      margin-top: 8px;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    
+    .strength-meter {
+      height: 100%;
+      width: 0%;
+      background: red;
+      transition: width 0.3s, background 0.3s;
+    }
+    
+    .password-toggle {
+      position: absolute;
+      right: 10px;
+      top: 40px;
+      cursor: pointer;
+      color: #666;
+    }
+    
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-color);
     }
   </style>
 </head>
 <body>
+  <button class="theme-toggle" id="themeToggle">🌓</button>
+  
   <div class="reset-container">
     <div class="logo">
-      <h1>RESET PORTAL</h1>
+      <h1>NEW SHADOW KEY</h1>
     </div>
     
-    <div class="instructions">
-      Enter your email address and we'll send you a link to reset your password.
-    </div>
-    
-    <form id="resetRequestForm">
+    <form id="resetPasswordForm">
+      <input type="hidden" id="resetToken">
+      
       <div class="input-group">
-        <label for="resetEmail">Email Address</label>
-        <input type="email" id="resetEmail" placeholder="Enter your account email" required>
+        <label for="newPassword">New Shadow Key</label>
+        <input type="password" id="newPassword" placeholder="Create a powerful key" required>
+        <span class="password-toggle" id="toggleNewPassword">👁️</span>
+        <div class="password-strength">
+          <div class="strength-meter" id="passwordStrength"></div>
+        </div>
+      </div>
+      
+      <div class="input-group">
+        <label for="confirmPassword">Confirm Shadow Key</label>
+        <input type="password" id="confirmPassword" placeholder="Re-enter your key" required>
+        <span class="password-toggle" id="toggleConfirmPassword">👁️</span>
       </div>
       
       <div class="error-message" id="resetError"></div>
       
-      <button type="submit" id="resetButton">SEND RESET LINK</button>
+      <button type="submit" id="resetButton">FORGE NEW KEY</button>
       
       <div class="login-link">
-        Remember your password? <a href="login.html">Login</a>
+        Remembered your key? <a href="login.html">Return to login</a>
       </div>
     </form>
   </div>
 
   <script>
-    document.getElementById('resetRequestForm').addEventListener('submit', async (e) => {
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    let darkMode = localStorage.getItem('darkMode') === 'false' ? false : prefersDark;
+    
+    function applyTheme() {
+      if(darkMode) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '🌙';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        themeToggle.textContent = '☀️';
+      }
+    }
+    
+    themeToggle.addEventListener('click', () => {
+      darkMode = !darkMode;
+      localStorage.setItem('darkMode', darkMode);
+      applyTheme();
+    });
+    
+    applyTheme();
+
+    // Extract token from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    
+    if(!token) {
+      window.location.href = 'forgot-password.html';
+      alert("Invalid shadow portal access");
+    }
+    
+    document.getElementById('resetToken').value = token;
+
+    // Password visibility toggle
+    document.getElementById('toggleNewPassword').addEventListener('click', function() {
+      const input = document.getElementById('newPassword');
+      const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+      input.setAttribute('type', type);
+      this.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+    });
+    
+    document.getElementById('toggleConfirmPassword').addEventListener('click', function() {
+      const input = document.getElementById('confirmPassword');
+      const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+      input.setAttribute('type', type);
+      this.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+    });
+
+    // Password strength meter
+    document.getElementById('newPassword').addEventListener('input', function() {
+      const password = this.value;
+      const strengthMeter = document.getElementById('passwordStrength');
+      let strength = 0;
+      
+      if(password.length > 7) strength += 1;
+      if(password.length > 11) strength += 1;
+      if(/[A-Z]/.test(password)) strength += 1;
+      if(/[0-9]/.test(password)) strength += 1;
+      if(/[^A-Za-z0-9]/.test(password)) strength += 1;
+      
+      const width = (strength / 5) * 100;
+      strengthMeter.style.width = width + '%';
+      
+      if(width < 40) {
+        strengthMeter.style.background = '#ff3333';
+      } else if(width < 70) {
+        strengthMeter.style.background = '#ffcc00';
+      } else {
+        strengthMeter.style.background = '#00cc00';
+      }
+    });
+
+    // Form submission
+    document.getElementById('resetPasswordForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const button = document.getElementById('resetButton');
       const errorElement = document.getElementById('resetError');
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
       
-      button.textContent = 'SENDING...';
+      // Validate passwords match
+      if(newPassword !== confirmPassword) {
+        errorElement.textContent = "Shadow keys don't match!";
+        errorElement.style.display = 'block';
+        return;
+      }
+      
+      // Validate password strength
+      if(newPassword.length < 8) {
+        errorElement.textContent = "Key must be at least 8 characters";
+        errorElement.style.display = 'block';
+        return;
+      }
+      
+      button.textContent = 'FORGING KEY...';
       button.disabled = true;
       
       try {
-        const response = await fetch('/api/password/reset-request', {
+        const response = await fetch('/api/password/reset', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            email: document.getElementById('resetEmail').value
+            token: document.getElementById('resetToken').value,
+            newPassword: newPassword
           })
         });
         
         if(response.ok) {
-          alert("Password reset link sent to your email!");
+          alert("Your shadow key has been reforged!");
           window.location.href = "login.html";
         } else {
           const data = await response.json();
-          errorElement.textContent = data.error || "Error sending reset link";
+          errorElement.textContent = data.error || "Failed to forge new key";
           errorElement.style.display = 'block';
         }
       } catch (error) {
-        errorElement.textContent = "Network error. Please try again.";
+        errorElement.textContent = "Shadow network disruption";
         errorElement.style.display = 'block';
       } finally {
-        button.textContent = 'SEND RESET LINK';
+        button.textContent = 'FORGE NEW KEY';
         button.disabled = false;
       }
     });
