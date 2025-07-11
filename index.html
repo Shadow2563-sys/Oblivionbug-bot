@@ -1,367 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oblivion Web</title>
-    <style>
-        :root {
-            --neon-blue: #00f0ff;
-            --neon-purple: #bd00ff;
-            --dark-bg: #0a0a12;
-            --darker-bg: #050508;
-        }
-        
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Courier New', monospace;
-            background-color: var(--dark-bg);
-            color: var(--neon-blue);
-            background-image: url('https://files.catbox.moe/5ydrgs.jpeg');
-            background-size: cover;
-            background-position: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .auth-box {
-            width: 350px;
-            padding: 30px;
-            background-color: rgba(10, 10, 18, 0.8);
-            border: 1px solid var(--neon-blue);
-            border-radius: 5px;
-            box-shadow: 0 0 15px var(--neon-blue),
-                        0 0 30px rgba(0, 240, 255, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .auth-box::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
-            z-index: -1;
-            border-radius: 6px;
-            animation: borderGlow 3s linear infinite;
-        }
-
-        @keyframes borderGlow {
-            0% { filter: blur(5px); opacity: 0.7; }
-            50% { filter: blur(7px); opacity: 1; }
-            100% { filter: blur(5px); opacity: 0.7; }
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 25px;
-            font-size: 28px;
-            text-shadow: 0 0 10px var(--neon-blue);
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 12px;
-            background-color: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--neon-blue);
-            color: var(--neon-blue);
-            font-family: 'Courier New', monospace;
-            border-radius: 3px;
-            transition: all 0.3s;
-        }
-
-        .input-group input:focus {
-            outline: none;
-            box-shadow: 0 0 10px var(--neon-blue);
-            background-color: rgba(0, 240, 255, 0.1);
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
-            border: none;
-            color: var(--dark-bg);
-            font-weight: bold;
-            font-family: 'Courier New', monospace;
-            cursor: pointer;
-            border-radius: 3px;
-            transition: all 0.3s;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            box-shadow: 0 0 15px var(--neon-blue);
-            transform: translateY(-2px);
-        }
-
-        .links {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 14px;
-        }
-
-        .links a {
-            color: var(--neon-blue);
-            text-decoration: none;
-            margin: 0 10px;
-            transition: all 0.3s;
-        }
-
-        .links a:hover {
-            text-shadow: 0 0 10px var(--neon-blue);
-        }
-
-        .error {
-            color: #ff3366;
-            text-align: center;
-            margin-bottom: 15px;
-            font-size: 14px;
-            text-shadow: 0 0 5px #ff3366;
-        }
-
-        .footer {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 12px;
-            color: rgba(0, 240, 255, 0.7);
-        }
-
-        .tab-container {
-            display: flex;
-            margin-bottom: 20px;
-        }
-
-        .tab {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            cursor: pointer;
-            border-bottom: 1px solid rgba(0, 240, 255, 0.3);
-            transition: all 0.3s;
-        }
-
-        .tab.active {
-            border-bottom: 2px solid var(--neon-blue);
-            color: var(--neon-blue);
-            text-shadow: 0 0 10px var(--neon-blue);
-        }
-
-        .form-container {
-            display: none;
-        }
-
-        .form-container.active {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .password-hint {
-            font-size: 12px;
-            color: rgba(0, 240, 255, 0.7);
-            margin-top: 5px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connecting to Oblivion</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+    
+    :root {
+      --neon-green: #0f0;
+      --dark-bg: #0a0a0a;
+      --light-bg: #111;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--dark-bg);
+      overflow: hidden;
+      font-family: 'Orbitron', sans-serif;
+    }
+    
+    .shadow-realm {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at center, #000 0%, #001a00 100%);
+      z-index: 9999;
+    }
+    
+    .terminal-loader {
+      width: 300px;
+      height: 300px;
+      position: relative;
+    }
+    
+    .terminal-spinner {
+      width: 100%;
+      height: 100%;
+      border: 3px solid transparent;
+      border-top-color: var(--neon-green);
+      border-radius: 50%;
+      animation: spin 2s linear infinite;
+      box-shadow: 0 0 10px var(--neon-green);
+    }
+    
+    .terminal-spinner:before, .terminal-spinner:after {
+      content: "";
+      position: absolute;
+      border: 3px solid transparent;
+      border-radius: 50%;
+      border-top-color: var(--neon-green);
+      top: 5px;
+      bottom: 5px;
+      left: 5px;
+      right: 5px;
+      animation: spin 3s linear infinite;
+      opacity: 0.8;
+    }
+    
+    .terminal-spinner:after {
+      top: 15px;
+      bottom: 15px;
+      left: 15px;
+      right: 15px;
+      animation: spin 4s linear infinite;
+      opacity: 0.5;
+    }
+    
+    .loading-text {
+      color: var(--neon-green);
+      text-shadow: 0 0 5px var(--neon-green);
+      margin-top: 30px;
+      font-size: 1.5rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      animation: pulse 1.5s infinite alternate;
+    }
+    
+    .loading-dots:after {
+      content: " .";
+      animation: dots 1.5s steps(5, end) infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    @keyframes pulse {
+      0% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+    
+    @keyframes dots {
+      0%, 20% { content: " ."; }
+      40% { content: " .."; }
+      60%, 100% { content: " ..."; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="auth-box">
-            <h1>OBLIVION WEB</h1>
-            
-            <div class="tab-container">
-                <div class="tab active" onclick="switchTab('login')">SIGN IN</div>
-                <div class="tab" onclick="switchTab('signup')">ENTER THE VOID</div>
-            </div>
-            
-            <div id="error-message" class="error"></div>
-            
-            <div id="login-form" class="form-container active">
-                <div class="input-group">
-                    <label>USERNAME OR EMAIL</label>
-                    <input type="text" id="login-username" placeholder="shadow1234">
-                </div>
-                <div class="input-group">
-                    <label>PASSWORD</label>
-                    <input type="password" id="login-password" placeholder="••••••••">
-                </div>
-                <button onclick="login()">ACCESS TERMINAL</button>
-                <div class="links">
-                    <a href="#" onclick="switchTab('signup')">No credentials? Initiate sequence</a>
-                    <span>|</span>
-                    <a href="#">Security protocol breached</a>
-                </div>
-            </div>
-            
-            <div id="signup-form" class="form-container">
-                <div class="input-group">
-                    <label>USERNAME</label>
-                    <input type="text" id="signup-username" placeholder="shadow1234" pattern="[a-z0-9_]+">
-                    <div class="password-hint">Only lowercase letters, numbers, and underscores</div>
-                </div>
-                <div class="input-group">
-                    <label>EMAIL</label>
-                    <input type="email" id="signup-email" placeholder="user@oblivion.web">
-                </div>
-                <div class="input-group">
-                    <label>PASSWORD</label>
-                    <input type="password" id="signup-password" placeholder="••••••••" pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$">
-                    <div class="password-hint">8+ characters, uppercase, number, special character</div>
-                </div>
-                <div class="input-group">
-                    <label>CONFIRM PASSWORD</label>
-                    <input type="password" id="signup-confirm" placeholder="••••••••">
-                </div>
-                <button onclick="signup()">ACTIVATE PROTOCOL</button>
-                <div class="links">
-                    <a href="#" onclick="switchTab('login')">Existing terminal detected</a>
-                </div>
-            </div>
-            
-            <div class="footer">
-                Made with █ by OBLIVION TECH<br>
-                © 2024-2025 OBLIVION WEB. All systems operational.
-            </div>
-        </div>
+  <div class="shadow-realm">
+    <div class="terminal-loader">
+      <div class="terminal-spinner"></div>
     </div>
+    <h1 class="loading-text">ACCESSING OBLIVION<span class="loading-dots"></span></h1>
+  </div>
 
-    <script>
-        // Tab switching
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.form-container').forEach(form => {
-                form.classList.remove('active');
-            });
-            
-            if (tabName === 'login') {
-                document.querySelector('.tab:nth-child(1)').classList.add('active');
-                document.getElementById('login-form').classList.add('active');
-            } else {
-                document.querySelector('.tab:nth-child(2)').classList.add('active');
-                document.getElementById('signup-form').classList.add('active');
-            }
-            
-            document.getElementById('error-message').textContent = '';
-        }
-
-        // API Base URL
-        const API_URL = 'https://your-render-backend.onrender.com';
-
-        // Login function
-        async function login() {
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
-            
-            try {
-                const response = await fetch(`${API_URL}/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        username,
-                        password
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    // Redirect to dashboard or main page
-                    window.location.href = '/dashboard';
-                } else {
-                    showError(data.error || 'Access denied. Invalid credentials.');
-                }
-            } catch (error) {
-                showError('Connection to Oblivion failed. Try again.');
-            }
-        }
-
-        // Signup function
-        async function signup() {
-            const username = document.getElementById('signup-username').value;
-            const email = document.getElementById('signup-email').value;
-            const password = document.getElementById('signup-password').value;
-            const confirm = document.getElementById('signup-confirm').value;
-            
-            if (password !== confirm) {
-                showError('Password mismatch detected.');
-                return;
-            }
-            
-            try {
-                const response = await fetch(`${API_URL}/signup`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        username,
-                        email,
-                        password
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    // Redirect after successful signup
-                    window.location.href = '/dashboard';
-                } else {
-                    showError(data.error || 'Activation sequence failed.');
-                }
-            } catch (error) {
-                showError('Connection to Oblivion failed. Try again.');
-            }
-        }
-
-        // Show error message
-        function showError(message) {
-            const errorElement = document.getElementById('error-message');
-            errorElement.textContent = message;
-            
-            // Pulse animation for error
-            errorElement.style.animation = 'none';
-            setTimeout(() => {
-                errorElement.style.animation = 'borderGlow 0.5s linear';
-            }, 10);
-        }
-
-        // Form validation
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('invalid', (e) => {
-                e.preventDefault();
-                showError('Invalid input detected. Check requirements.');
-            });
-        });
-    </script>
+  <script>
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 4500); // Increased duration for dramatic effect
+  </script>
 </body>
 </html>
