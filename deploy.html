@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oblivion - Deploy Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --neon-green: #0f0;
+      --dark-bg: #0a0a0a;
+      --light-bg: #111;
+      --card-bg: rgba(20, 20, 20, 0.85);
+      --text-color: #eee;
+    }
+    
+    [data-theme="light"] {
+      --neon-green: #007700;
+      --text-color: #333;
+      --bg-color: #f0f0f0;
+      --card-bg: rgba(240, 240, 240, 0.9);
+    }
+    
+    body {
+      background: url('https://files.catbox.moe/5ydrgs.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Roboto', sans-serif;
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .deploy-container {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      width: 90%;
+      max-width: 800px;
+      padding: 30px;
+      box-shadow: 0 0 25px rgba(0, 255, 0, 0.3);
+      border: 1px solid rgba(0, 255, 0, 0.2);
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      border-bottom: 1px solid rgba(0, 255, 0, 0.3);
+      padding-bottom: 15px;
+    }
+    
+    .logo {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-green);
+      text-shadow: 0 0 10px var(--neon-green);
+      letter-spacing: 3px;
+      font-size: 1.8rem;
+    }
+    
+    .theme-toggle {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-color);
+    }
+    
+    .control-panel {
+      background: rgba(30, 30, 30, 0.7);
+      border-radius: 8px;
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+    
+    .panel-title {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-green);
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+    
+    .input-group {
+      margin-bottom: 20px;
+    }
+    
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #aaa;
+    }
+    
+    .input-group input {
+      width: 100%;
+      padding: 12px 15px;
+      background: var(--input-bg, #222);
+      border: 1px solid #333;
+      border-radius: 5px;
+      color: var(--text-color);
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+    
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--neon-green);
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+    
+    .control-btn {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 5px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-transform: uppercase;
+      flex: 1;
+    }
+    
+    .start-btn {
+      background: linear-gradient(135deg, #00aa00, #008800);
+      color: white;
+    }
+    
+    .stop-btn {
+      background: linear-gradient(135deg, #aa0000, #880000);
+      color: white;
+    }
+    
+    .add-btn {
+      background: linear-gradient(135deg, #0000aa, #000088);
+      color: white;
+    }
+    
+    .control-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4);
+    }
+    
+    .status-panel {
+      background: rgba(30, 30, 30, 0.7);
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 30px;
+    }
+    
+    .status-title {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-green);
+      margin-top: 0;
+      margin-bottom: 15px;
+    }
+    
+    .status-content {
+      background: rgba(10, 10, 10, 0.5);
+      border-radius: 5px;
+      padding: 15px;
+      font-family: monospace;
+      min-height: 100px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .pairing-code {
+      font-size: 1.2rem;
+      color: var(--neon-green);
+      word-break: break-all;
+    }
+    
+    @media (max-width: 600px) {
+      .button-group {
+        flex-direction: column;
+      }
+      
+      .control-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="deploy-container">
+    <div class="header">
+      <div class="logo">OBLIVION DEPLOYMENT</div>
+      <button class="theme-toggle" id="themeToggle">🌓</button>
+    </div>
+    
+    <div class="control-panel">
+      <h2 class="panel-title">BOT CONTROLS</h2>
+      
+      <div class="input-group">
+        <label for="phoneNumber">PHONE NUMBER FOR PAIRING</label>
+        <input type="text" id="phoneNumber" placeholder="Enter phone number with country code">
+      </div>
+      
+      <div class="button-group">
+        <button class="control-btn start-btn" id="startBtn">START BOT</button>
+        <button class="control-btn stop-btn" id="stopBtn">STOP BOT</button>
+        <button class="control-btn add-btn" id="addBtn">ADD NUMBER</button>
+      </div>
+    </div>
+    
+    <div class="status-panel">
+      <h2 class="status-title">DEPLOYMENT STATUS</h2>
+      <div class="status-content" id="statusOutput">
+        <div>Oblivion Deployment Panel Ready</div>
+        <div>Waiting for commands...</div>
+      </div>
+    </div>
+    
+    <div class="status-panel" id="pairingPanel" style="display: none;">
+      <h2 class="status-title">PAIRING CODE</h2>
+      <div class="status-content">
+        <div class="pairing-code" id="pairingCode"></div>
+        <div>Enter this code when prompted on your device</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    let darkMode = localStorage.getItem('darkMode') === 'false' ? false : prefersDark;
+    
+    function applyTheme() {
+      if(darkMode) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '🌙';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        themeToggle.textContent = '☀️';
+      }
+    }
+    
+    themeToggle.addEventListener('click', () => {
+      darkMode = !darkMode;
+      localStorage.setItem('darkMode', darkMode);
+      applyTheme();
+    });
+    
+    applyTheme();
+
+    // Deployment Controls
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const addBtn = document.getElementById('addBtn');
+    const phoneInput = document.getElementById('phoneNumber');
+    const statusOutput = document.getElementById('statusOutput');
+    const pairingPanel = document.getElementById('pairingPanel');
+    const pairingCode = document.getElementById('pairingCode');
+    
+    // Add console-like output
+    function addStatusMessage(message) {
+      const messageElement = document.createElement('div');
+      messageElement.textContent = `> ${message}`;
+      statusOutput.appendChild(messageElement);
+      statusOutput.scrollTop = statusOutput.scrollHeight;
+    }
+
+    // Function to call backend API
+    async function callBackend(endpoint, data = {}) {
+      try {
+        const response = await fetch(`/api/${endpoint}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        return await response.json();
+      } catch (error) {
+        addStatusMessage(`Error: ${error.message}`);
+        console.error('Error calling backend:', error);
+        return null;
+      }
+    }
+    
+    // Start bot function
+    startBtn.addEventListener('click', async () => {
+      if (!phoneInput.value) {
+        addStatusMessage("Error: Please enter a phone number first");
+        return;
+      }
+      
+      addStatusMessage(`Starting Oblivion bot for number: ${phoneInput.value}`);
+      addStatusMessage("Connecting to backend...");
+      
+      try {
+        const result = await callBackend('start', {
+          phoneNumber: phoneInput.value
+        });
+        
+        if (result && result.success) {
+          addStatusMessage("Oblivion bot started successfully");
+          
+          if (result.pairingCode) {
+            pairingCode.textContent = result.pairingCode;
+            pairingPanel.style.display = 'block';
+            addStatusMessage(`Pairing code generated for ${phoneInput.value}`);
+            addStatusMessage(`Please enter code ${result.pairingCode} when prompted`);
+          }
+        } else {
+          addStatusMessage("Failed to start bot. Check backend logs.");
+        }
+      } catch (error) {
+        addStatusMessage("Error starting bot: " + error.message);
+      }
+    });
+    
+    // Stop bot function
+    stopBtn.addEventListener('click', async () => {
+      addStatusMessage("Stopping Oblivion bot...");
+      
+      try {
+        const result = await callBackend('stop');
+        
+        if (result && result.success) {
+          addStatusMessage("Oblivion bot stopped successfully");
+          pairingPanel.style.display = 'none';
+        } else {
+          addStatusMessage("Failed to stop bot. Check backend logs.");
+        }
+      } catch (error) {
+        addStatusMessage("Error stopping bot: " + error.message);
+      }
+    });
+    
+    // Add number function
+    addBtn.addEventListener('click', async () => {
+      if (!phoneInput.value) {
+        addStatusMessage("Error: Please enter a phone number");
+        return;
+      }
+      
+      addStatusMessage(`Adding number to pairing queue: ${phoneInput.value}`);
+      
+      try {
+        const result = await callBackend('add', {
+          phoneNumber: phoneInput.value
+        });
+        
+        if (result && result.success) {
+          addStatusMessage(`Number ${phoneInput.value} added successfully`);
+          addStatusMessage("Ready for pairing when bot starts");
+        } else {
+          addStatusMessage("Failed to add number. Check backend logs.");
+        }
+      } catch (error) {
+        addStatusMessage("Error adding number: " + error.message);
+      }
+    });
+  </script>
+</body>
+</html>
