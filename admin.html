@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oblivion Admin Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary: #0f0;
+      --danger: #f44336;
+      --warning: #ff9800;
+      --text: #eee;
+      --bg: #121212;
+      --card-bg: #1e1e1e;
+      --border: #333;
+    }
+    
+    [data-theme="light"] {
+      --primary: #007700;
+      --text: #333;
+      --bg: #f5f5f5;
+      --card-bg: #fff;
+      --border: #ddd;
+    }
+    
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+    }
+    
+    .admin-container {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      min-height: 100vh;
+    }
+    
+    .sidebar {
+      background-color: var(--card-bg);
+      border-right: 1px solid var(--border);
+      padding: 20px;
+    }
+    
+    .sidebar-header {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 30px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 15px;
+    }
+    
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .sidebar-menu li {
+      margin-bottom: 10px;
+    }
+    
+    .sidebar-menu a {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      color: var(--text);
+      text-decoration: none;
+      border-radius: 5px;
+      transition: all 0.3s;
+    }
+    
+    .sidebar-menu a:hover, .sidebar-menu a.active {
+      background-color: rgba(0, 255, 0, 0.1);
+      color: var(--primary);
+    }
+    
+    .sidebar-menu i {
+      margin-right: 10px;
+      width: 20px;
+      text-align: center;
+    }
+    
+    .main-content {
+      padding: 20px;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .stat-card {
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .stat-card h3 {
+      margin-top: 0;
+      color: #aaa;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+    
+    .stat-card .value {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 10px 0;
+      color: var(--primary);
+    }
+    
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: var(--card-bg);
+    }
+    
+    .data-table th, .data-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .data-table th {
+      background-color: rgba(0, 255, 0, 0.05);
+      color: var(--primary);
+      font-weight: 500;
+    }
+    
+    .data-table tr:hover {
+      background-color: rgba(0, 255, 0, 0.03);
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    
+    .badge-primary {
+      background-color: rgba(0, 255, 0, 0.1);
+      color: var(--primary);
+    }
+    
+    .badge-danger {
+      background-color: rgba(244, 67, 54, 0.1);
+      color: var(--danger);
+    }
+    
+    .badge-warning {
+      background-color: rgba(255, 152, 0, 0.1);
+      color: var(--warning);
+    }
+    
+    .action-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #666;
+      margin: 0 5px;
+      transition: color 0.3s;
+    }
+    
+    .action-btn:hover {
+      color: var(--primary);
+    }
+    
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h2>OBLIVION ADMIN</h2>
+        <small>Shadow Control Panel</small>
+      </div>
+      
+      <ul class="sidebar-menu">
+        <li><a href="#" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="#"><i class="fas fa-users"></i> Users</a></li>
+        <li><a href="#"><i class="fas fa-robot"></i> Bot Status</a></li>
+        <li><a href="#"><i class="fas fa-server"></i> Servers</a></li>
+        <li><a href="#"><i class="fas fa-chart-line"></i> Analytics</a></li>
+        <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+        <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+    </div>
+    
+    <div class="main-content">
+      <button class="theme-toggle" id="themeToggle">🌓</button>
+      
+      <h1>Admin Dashboard</h1>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Total Users</h3>
+          <div class="value" id="totalUsers">-</div>
+          <div>+24 this week</div>
+        </div>
+        
+        <div class="stat-card">
+          <h3>Bot Servers</h3>
+          <div class="value" id="totalServers">-</div>
+          <div>+5 this week</div>
+        </div>
+        
+        <div class="stat-card">
+          <h3>Commands Used</h3>
+          <div class="value" id="totalCommands">-</div>
+          <div>24h: 12,345</div>
+        </div>
+        
+        <div class="stat-card">
+          <h3>System Status</h3>
+          <div class="value"><span class="badge badge-primary" id="systemStatus">-</span></div>
+          <div>Uptime: <span id="uptime">-</span></div>
+        </div>
+      </div>
+      
+      <h2>Recent Activity</h2>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Action</th>
+              <th>Server</th>
+              <th>Time</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="activityTable">
+            <!-- Filled by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+      
+      <h2>User Management</h2>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Joined</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="userTable">
+            <!-- Filled by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme toggle (same as before)
+    
+    // Load admin data
+    async function loadAdminData() {
+      try {
+        const response = await fetch('/api/admin/stats', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+          }
+        });
+        
+        if(response.ok) {
+          const data = await response.json();
+          
+          // Update stats
+          document.getElementById('totalUsers').textContent = data.totalUsers;
+          document.getElementById('totalServers').textContent = data.totalServers;
+          document.getElementById('totalCommands').textContent = data.totalCommands;
+          document.getElementById('systemStatus').textContent = data.systemStatus;
+          document.getElementById('uptime').textContent = data.uptime;
+          
+          // Populate activity table
+          const activityTable = document.getElementById('activityTable');
+          activityTable.innerHTML = data.recentActivity.map(activity => `
+            <tr>
+              <td>${activity.username}</td>
+              <td>${activity.action}</td>
+              <td>${activity.server}</td>
+              <td>${new Date(activity.timestamp).toLocaleString()}</td>
+              <td><span class="badge ${activity.status === 'success' ? 'badge-primary' : activity.status === 'warning' ? 'badge-warning' : 'badge-danger'}">${activity.status}</span></td>
+              <td>
+                <button class="action-btn" title="View details"><i class="fas fa-eye"></i></button>
+                <button class="action-btn" title="Ban user" ${activity.action.includes('ban') ? 'disabled' : ''}><i class="fas fa-ban"></i></button>
+              </td>
+            </tr>
+          `).join('');
+          
+          // Populate user table
+          const userTable = document.getElementById('userTable');
+          userTable.innerHTML = data.users.map(user => `
+            <tr>
+              <td>${user.id}</td>
+              <td>${user.username}</td>
+              <td>${user.email}</td>
+              <td>${new Date(user.joined).toLocaleDateString()}</td>
+              <td><span class="badge ${user.active ? 'badge-primary' : 'badge-danger'}">${user.active ? 'Active' : 'Inactive'}</span></td>
+              <td>
+                <button class="action-btn" title="View profile"><i class="fas fa-user"></i></button>
+                <button class="action-btn" title="Edit" ${user.role === 'admin' ? 'disabled' : ''}><i class="fas fa-edit"></i></button>
+                <button class="action-btn" title="${user.banned ? 'Unban' : 'Ban'}" ${user.role === 'admin' ? 'disabled' : ''}><i class="fas ${user.banned ? 'fa-unlock' : 'fa-ban'}"></i></button>
+              </td>
+            </tr>
+          `).join('');
+        } else {
+          if(response.status === 401) {
+            window.location.href = 'login.html?admin=1';
+          } else {
+            alert('Error loading admin data');
+          }
+        }
+      } catch (error) {
+        console.error('Admin data error:', error);
+      }
+    }
+    
+    // Initial load
+    loadAdminData();
+    setInterval(loadAdminData, 30000); // Refresh every 30 seconds
+    
+    // Add click handlers for action buttons
+    document.addEventListener('click', (e) => {
+      if(e.target.closest('.action-btn')) {
+        const btn = e.target.closest('.action-btn');
+        const action = btn.querySelector('i').className;
+        const row = btn.closest('tr');
+        const userId = row.querySelector('td:first-child').textContent;
+        
+        if(action.includes('fa-ban')) {
+          if(confirm(`Ban user ${userId}?`)) {
+            banUser(userId, true);
+          }
+        } else if(action.includes('fa-unlock')) {
+          if(confirm(`Unban user ${userId}?`)) {
+            banUser(userId, false);
+          }
+        }
+        // Add other actions as needed
+      }
+    });
+    
+    async function banUser(userId, ban) {
+      try {
+        const response = await fetch(`/api/admin/users/${userId}/ban`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+          },
+          body: JSON.stringify({ ban })
+        });
+        
+        if(response.ok) {
+          loadAdminData(); // Refresh data
+        } else {
+          alert('Error updating user');
+        }
+      } catch (error) {
+        console.error('Ban error:', error);
+      }
+    }
+  </script>
+</body>
+</html>
