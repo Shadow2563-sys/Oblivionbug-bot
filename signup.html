@@ -244,67 +244,72 @@
     });
     
     // Form validation
-    document.getElementById('signupForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      // Reset errors
-      document.querySelectorAll('.error-message').forEach(el => {
-        el.style.display = 'none';
-      });
-      
-      // Validate passwords match
-      const password = document.getElementById('signupPassword').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
-      
-      if (password !== confirmPassword) {
-        document.getElementById('confirmError').textContent = "Passwords don't match!";
-        document.getElementById('confirmError').style.display = 'block';
-        return;
-      }
-      
-      // Validate terms
-      if (!document.getElementById('agreeTerms').checked) {
-        alert("You must agree to the terms and conditions");
-        return;
-      }
-      
-      // Show loading state
-      const signupButton = document.getElementById('signupButton');
-      signupButton.textContent = 'CREATING PORTAL...';
-      signupButton.disabled = true;
-      
-      try {
-        const response = await fetch('/api/signup', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            username: document.getElementById('signupUsername').value,
-            email: document.getElementById('signupEmail').value,
-            password: password
-          })
-        });
-        
-        if(response.ok) {
-          // Success - redirect to login with success message
-          window.location.href = "login.html?signup=success";
-        } else {
-          // Show error message
-          const data = await response.json();
-          
-          if (data.field) {
-            document.getElementById(`${data.field}Error`).textContent = data.error;
-            document.getElementById(`${data.field}Error`).style.display = 'block';
-          } else {
-            alert(data.error || "Registration failed!");
-          }
-        }
-      } catch (error) {
-        alert("Network error. Please try again.");
-      } finally {
-        signupButton.textContent = 'ENTER THE SHADOW';
-        signupButton.disabled = false;
-      }
+document.getElementById('signupForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  // Reset errors
+  document.querySelectorAll('.error-message').forEach(el => {
+    el.style.display = 'none';
+  });
+  
+  // Validate passwords match
+  const password = document.getElementById('signupPassword').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
+  
+  if (password !== confirmPassword) {
+    document.getElementById('confirmError').textContent = "Passwords don't match!";
+    document.getElementById('confirmError').style.display = 'block';
+    return;
+  }
+  
+  // Validate terms
+  if (!document.getElementById('agreeTerms').checked) {
+    alert("You must agree to the terms and conditions");
+    return;
+  }
+  
+  // Show loading state
+  const signupButton = document.getElementById('signupButton');
+  signupButton.textContent = 'CREATING PORTAL...';
+  signupButton.disabled = true;
+  
+  try {
+    const response = await fetch('/api/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: document.getElementById('signupUsername').value,
+        email: document.getElementById('signupEmail').value,
+        password: password
+      })
     });
+    
+    const data = await response.json();
+    
+    if(response.ok) {
+      // Store the token in localStorage or sessionStorage
+      if (data.token) {
+        localStorage.setItem('oblivionToken', data.token);
+      }
+      
+      // Redirect to dashboard
+      window.location.href = "dashboard.html";
+    } else {
+      // Show error message
+      if (data.field) {
+        document.getElementById(`${data.field}Error`).textContent = data.error;
+        document.getElementById(`${data.field}Error`).style.display = 'block';
+      } else {
+        alert(data.error || "Registration failed!");
+      }
+    }
+  } catch (error) {
+    alert("Network error. Please try again.");
+  } finally {
+    signupButton.textContent = 'ENTER THE SHADOW';
+    signupButton.disabled = false;
+  }
+});
   </script>
 </body>
 </html>
