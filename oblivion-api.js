@@ -242,7 +242,16 @@ app.post('/api/signup', authLimiter, async (req, res) => {
     { expiresIn: '1h' }
   );
   
-  res.status(201).json({ token });
+  // Return token and user data
+  res.status(201).json({ 
+    token,
+    user: {
+      id: newUser.id,
+      username: newUser.username,
+      email: newUser.email,
+      role: newUser.role
+    }
+  });
 });
 
 // Password Reset Routes
