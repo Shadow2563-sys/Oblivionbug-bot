@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oblivion Portal - Sign Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    /* Shared styles with login page */
+    :root {
+      --neon-green: #0f0;
+      --dark-bg: #0a0a0a;
+      --light-bg: #111;
+      --input-bg: #222;
+      --text-color: #eee;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      background: url('https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Roboto', sans-serif;
+      color: var(--text-color);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .signup-container {
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      width: 450px;
+      padding: 40px;
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+      border: 1px solid rgba(0, 255, 0, 0.1);
+      animation: fadeIn 0.5s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .logo h1 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-green);
+      text-shadow: 0 0 10px var(--neon-green);
+      letter-spacing: 3px;
+      font-size: 2rem;
+    }
+    
+    .input-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+    
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #aaa;
+    }
+    
+    .input-group input {
+      width: 100%;
+      padding: 12px 15px;
+      background: var(--input-bg);
+      border: 1px solid #333;
+      border-radius: 5px;
+      color: var(--text-color);
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+    
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--neon-green);
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+    }
+    
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #00aa00, #008800);
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    button:hover {
+      background: linear-gradient(135deg, #00cc00, #00aa00);
+      box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+      transform: translateY(-2px);
+    }
+    
+    .login-link {
+      text-align: center;
+      margin-top: 25px;
+      color: #666;
+    }
+    
+    .login-link a {
+      color: var(--neon-green);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+    
+    .login-link a:hover {
+      text-shadow: 0 0 5px var(--neon-green);
+    }
+    
+    .error-message {
+      color: #ff3333;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+    
+    .password-strength {
+      height: 4px;
+      background: #333;
+      margin-top: 8px;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    
+    .strength-meter {
+      height: 100%;
+      width: 0%;
+      background: red;
+      transition: width 0.3s, background 0.3s;
+    }
+    
+    .terms {
+      font-size: 13px;
+      color: #666;
+      margin: 20px 0;
+    }
+    
+    .terms input {
+      margin-right: 8px;
+    }
+    
+    .terms a {
+      color: var(--neon-green);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <div class="logo">
+      <h1>JOIN OBLIVION</h1>
+    </div>
+    
+    <form id="signupForm">
+      <div class="input-group">
+        <label for="signupUsername">Username</label>
+        <input type="text" id="signupUsername" placeholder="Choose your shadow name" required>
+        <div class="error-message" id="usernameError"></div>
+      </div>
+      
+      <div class="input-group">
+        <label for="signupEmail">Email</label>
+        <input type="email" id="signupEmail" placeholder="Enter your email" required>
+        <div class="error-message" id="emailError"></div>
+      </div>
+      
+      <div class="input-group">
+        <label for="signupPassword">Password</label>
+        <input type="password" id="signupPassword" placeholder="Create a strong password" required>
+        <div class="password-strength">
+          <div class="strength-meter" id="passwordStrength"></div>
+        </div>
+        <div class="error-message" id="passwordError"></div>
+      </div>
+      
+      <div class="input-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" placeholder="Repeat your password" required>
+        <div class="error-message" id="confirmError"></div>
+      </div>
+      
+      <div class="terms">
+        <input type="checkbox" id="agreeTerms" required>
+        <label for="agreeTerms">I agree to the <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a></label>
+      </div>
+      
+      <button type="submit" id="signupButton">ENTER THE SHADOW</button>
+      
+      <div class="login-link">
+        Already have an account? <a href="login.html">Login</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Password strength indicator
+    document.getElementById('signupPassword').addEventListener('input', function() {
+      const password = this.value;
+      const strengthMeter = document.getElementById('passwordStrength');
+      let strength = 0;
+      
+      // Length check
+      if (password.length > 7) strength += 1;
+      if (password.length > 11) strength += 1;
+      
+      // Complexity checks
+      if (/[A-Z]/.test(password)) strength += 1;
+      if (/[0-9]/.test(password)) strength += 1;
+      if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+      
+      // Update meter
+      const width = (strength / 5) * 100;
+      strengthMeter.style.width = width + '%';
+      
+      // Color based on strength
+      if (width < 40) {
+        strengthMeter.style.background = '#ff3333';
+      } else if (width < 70) {
+        strengthMeter.style.background = '#ffcc00';
+      } else {
+        strengthMeter.style.background = '#00cc00';
+      }
+    });
+    
+    // Form validation
+    document.getElementById('signupForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Reset errors
+      document.querySelectorAll('.error-message').forEach(el => {
+        el.style.display = 'none';
+      });
+      
+      // Validate passwords match
+      const password = document.getElementById('signupPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      
+      if (password !== confirmPassword) {
+        document.getElementById('confirmError').textContent = "Passwords don't match!";
+        document.getElementById('confirmError').style.display = 'block';
+        return;
+      }
+      
+      // Validate terms
+      if (!document.getElementById('agreeTerms').checked) {
+        alert("You must agree to the terms and conditions");
+        return;
+      }
+      
+      // Show loading state
+      const signupButton = document.getElementById('signupButton');
+      signupButton.textContent = 'CREATING PORTAL...';
+      signupButton.disabled = true;
+      
+      try {
+        const response = await fetch('/api/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: document.getElementById('signupUsername').value,
+            email: document.getElementById('signupEmail').value,
+            password: password
+          })
+        });
+        
+        if(response.ok) {
+          // Success - redirect to login with success message
+          window.location.href = "login.html?signup=success";
+        } else {
+          // Show error message
+          const data = await response.json();
+          
+          if (data.field) {
+            document.getElementById(`${data.field}Error`).textContent = data.error;
+            document.getElementById(`${data.field}Error`).style.display = 'block';
+          } else {
+            alert(data.error || "Registration failed!");
+          }
+        }
+      } catch (error) {
+        alert("Network error. Please try again.");
+      } finally {
+        signupButton.textContent = 'ENTER THE SHADOW';
+        signupButton.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
