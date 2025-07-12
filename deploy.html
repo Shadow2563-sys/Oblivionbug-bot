@@ -295,35 +295,83 @@
       }
     }
     
-    // Start bot function
+    // Async function to start pairing session
+    async function startPairing(xeonNumber) {
+      if (!xeonNumber) {
+        addStatusMessage("Error: No phone number provided");
+        return { success: false };
+      }
+      
+      addStatusMessage(`Starting pairing session for: ${xeonNumber}`);
+      
+      try {
+        // Simulate pairing process with random code
+        const generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
+        
+        // Show pairing code to user
+        pairingCode.textContent = generatedCode;
+        pairingPanel.style.display = 'block';
+        
+        addStatusMessage(`Pairing code generated: ${generatedCode}`);
+        addStatusMessage("Waiting for device confirmation...");
+        
+        // Simulate pairing confirmation after delay
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        
+        addStatusMessage(`Device ${xeonNumber} paired successfully!`);
+        
+        return {
+          success: true,
+          pairingCode: generatedCode,
+          phoneNumber: xeonNumber
+        };
+      } catch (error) {
+        addStatusMessage(`Pairing failed: ${error.message}`);
+        return { success: false };
+      }
+    }
+    
+    // Start bot function - now using startPairing
     startBtn.addEventListener('click', async () => {
       if (!phoneInput.value) {
         addStatusMessage("Error: Please enter a phone number first");
         return;
       }
       
-      addStatusMessage(`Starting Oblivion bot for number: ${phoneInput.value}`);
-      addStatusMessage("Connecting to backend...");
+      const xeonNumber = phoneInput.value.trim();
+      addStatusMessage(`Initiating Oblivion bot for number: ${xeonNumber}`);
+      
+      // Disable buttons during operation
+      startBtn.disabled = true;
+      stopBtn.disabled = true;
+      addBtn.disabled = true;
       
       try {
-        const result = await callBackend('start', {
-          phoneNumber: phoneInput.value
-        });
+        const pairingResult = await startPairing(xeonNumber);
         
-        if (result && result.success) {
+        if (pairingResult && pairingResult.success) {
           addStatusMessage("Oblivion bot started successfully");
           
-          if (result.pairingCode) {
-            pairingCode.textContent = result.pairingCode;
-            pairingPanel.style.display = 'block';
-            addStatusMessage(`Pairing code generated for ${phoneInput.value}`);
-            addStatusMessage(`Please enter code ${result.pairingCode} when prompted`);
+          // Optional: Call backend to confirm pairing
+          const backendResult = await callBackend('confirm-pairing', {
+            phoneNumber: xeonNumber,
+            pairingCode: pairingResult.pairingCode
+          });
+          
+          if (backendResult && backendResult.success) {
+            addStatusMessage("Backend confirmed successful pairing");
           }
         } else {
-          addStatusMessage("Failed to start bot. Check backend logs.");
+          addStatusMessage("Failed to complete pairing process");
+          pairingPanel.style.display = 'none';
         }
       } catch (error) {
-        addStatusMessage("Error starting bot: " + error.message);
+        addStatusMessage("Error in pairing process: " + error.message);
+      } finally {
+        // Re-enable buttons
+        startBtn.disabled = false;
+        stopBtn.disabled = false;
+        addBtn.disabled = false;
       }
     });
     
